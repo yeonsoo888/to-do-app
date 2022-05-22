@@ -15,6 +15,7 @@ function Login(props:appProps):JSX.Element {
     const inputPw = useRef<HTMLInputElement>(null);
 
     const [confirmId,setConfirmId] = useState<string | Boolean>(false);
+    const [correctId,setCorrectId] = useState(true);
     const member = new Member();
     const cookies = new Cookies();
 
@@ -52,9 +53,13 @@ function Login(props:appProps):JSX.Element {
                 level: userInfo.level,
             }});
             props.setIsLogin(true);
+            setCorrectId(true);
         })
         .catch((err:any) => {
-            
+            setCorrectId(false);
+            setTimeout(() => {
+                setCorrectId(true);
+            },1500)
         });
     }
 
@@ -66,8 +71,10 @@ function Login(props:appProps):JSX.Element {
                     <input type="text" placeholder="E-mail을 입력하세요" ref={inputMail} />
                     <input type="password" placeholder="비밀번호를 입력하세요" ref={inputPw} />
                     <button type="submit">로그인</button>
+                    <p className="testTxt">ID : test@test.com</p>
+                    <p className="testTxt">PW : 1234</p>
                     {
-                        confirmId && <p>ID , PASSWORD를 확인해주세요</p>
+                        !correctId && <p className="correctId">ID , PASSWORD를 확인해주세요</p>
                     }
                 </form>
             </div>

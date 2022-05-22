@@ -4,27 +4,21 @@ import { Link } from "react-router-dom"
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux'
 import { Dispatch } from 'redux'
-import store from '../../redux/store';
 import { RootState } from '../../redux/store';
 import { BoardServ } from "../../service/board";
+import store from '../../redux/store';
 
 export default function List():JSX.Element {
     const post = useSelector((store:RootState) => store.boardReducer.board);
+    const auth:{mail?:string} = useSelector((store:RootState) => store.memberReducer.member);
+    
     const board = new BoardServ();
+    const today:Date = new Date();
     const dispatch:Dispatch = useDispatch()
 
-    const elInput = useRef<HTMLInputElement>(null);
+    const elInput = useRef(null) as React.RefObject<HTMLInputElement>;
     const elTextarea = useRef<HTMLTextAreaElement>(null);
-    
-    useEffect(() => {
-        board.fetchBoard('get','/list')
-        .then((response:any) => {
-            dispatch({type: "setBoard",payload: response.data.reverse()});
-        })
-        .catch(err => {
-            console.log(err);
-        });
-    },[])
+    const writerInput = useRef(null) as React.RefObject<HTMLInputElement>;
 
     const handleDone = (number:Number) => {
         board.fetchBoard('put','/done',{
@@ -65,9 +59,57 @@ export default function List():JSX.Element {
         });
     }
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log("ok");
+        board.fetchBoard(
+            'post',
+            '/add',
+            {
+                title: elInput.current!.value,
+                content: elTextarea.current!.value,
+                date: today.toLocaleDateString(),
+                writer : writerInput.current!.value,
+                status: "doing",
+            }
+        )
+        .then((res:any) => {
+            const newPost = [
+                {
+                    _id : res.data._id,
+                    title: elInput.current!.value,
+                    content: elTextarea.current!.value,
+                    date: today.toLocaleDateString(),
+                    writer : writerInput.current!.value,
+                    status: "doing"
+                },
+                ...post,
+            ];
+            dispatch({type:"setBoard", payload:newPost})
+        });
+    }
+
+    const handleDelete = (number:Number) => {
+        board.fetchBoard(
+            'delete',
+            '/delete',
+            {
+                _id: number
+            }
+        )
+        .then((res:any) => {
+            const removeBoard = post.filter((item:any) => {
+                if(number !== item._id) {
+                    return item;
+                }
+            });
+            dispatch({type:'setBoard',payload:removeBoard});
+        });
+    }
+
     return (
         <>
-            <ul className="board__list">
+            <ul className="board__list" >
                 {
                     post.map((item:any) => {
                         let key:React.Key = item._id;
@@ -83,11 +125,10 @@ export default function List():JSX.Element {
                                 <div className="btnWrap">
                                     {
                                         item.status == "done"
-                                        ? <button onClick={() => {handleDoing(item._id)}}>DOING</button>
-                                        : <button onClick={() => {handleDone(item._id)}}>DONE</button>
+                                        ? <button onClick={() => {handleDoing(item._id)}}>DONE</button>
+                                        : <button onClick={() => {handleDone(item._id)}}>DOING</button>
                                     }
-                                    
-                                    <button>DELETE</button>
+                                    <button onClick={() => {handleDelete(item._id)}}>DELETE</button>
                                 </div>
                             </li>
                         )
@@ -95,9 +136,13 @@ export default function List():JSX.Element {
                 }
             </ul>
             <div className="write__Area">
-                <form>
-                    <input type="text" name="title" placeholder="제목" ref={elInput} />
-                    <textarea name="content" placeholder="할일" ref={elTextarea}></textarea>
+                <form onSubmit={(e) => {handleSubmit(e);}}>
+                <input type="hidden" name="writer" value={auth.mail} hidden ref={writerInput} />
+                    <div className="write__Inner">
+                        <input type="text" name="title" placeholder="할 일" ref={elInput} />
+                        <textarea name="content" placeholder="설명" ref={elTextarea}></textarea>
+                        <button>Add List</button>
+                    </div>
                 </form>
             </div>
         </>

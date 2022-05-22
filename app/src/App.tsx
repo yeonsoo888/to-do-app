@@ -13,11 +13,13 @@ import Login from './components/login';
 import Board from './components/board/board';
 
 import './css/style.scss';
+import { useHistory } from 'react-router';
 function App():JSX.Element {
-  const auth = useSelector((store:RootState) => store.memberReducer.member)
+  const history = useHistory()
   const dispatch:Dispatch = useDispatch()
   const cookies = new Cookies();
   const [isLogin,setIsLogin]:any[] = useState(false);
+
 
 
   useEffect(() => {
@@ -38,19 +40,27 @@ function App():JSX.Element {
   const authLogout = ():void => {
     setIsLogin(false);
     cookies.remove("user");
-    window.location.reload();
+    history.push('/');
   }
 
   return (
     <>
       <h1 className="TODOAPP__TIT">YS TODO APP</h1>
       {
+        isLogin && (
+          <div className='btnLogoutWrap'>
+            <button onClick={authLogout}>로그아웃</button>
+          </div>
+        )
+      }
+      
+      {
         !isLogin
         ? <Login setIsLogin={setIsLogin} />
         : (
           <>
             <Board />
-            <button onClick={authLogout}>로그아웃</button>
+            
           </>
         )
       }      

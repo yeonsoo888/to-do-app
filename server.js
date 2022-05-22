@@ -74,6 +74,57 @@ app.put('/modify', function(req, res){
     });
 });
 
+app.post('/add', (req, res) => {
+    db.collection('counter').findOne({name : 'totalCounter'}, function(err, result){
+        var totalCount = result.counter;
+        db.collection('post').insertOne( { 
+            _id : (totalCount + 1), 
+            title : req.body.title, 
+            content: req.body.content,
+            date : req.body.date,
+            writer: req.body.writer,
+            status: req.body.status
+        } , (err,result) => {
+            if(err) {
+                console.log(err)
+            }
+            db.collection('counter').updateOne( {name : 'totalCounter' } , { $inc : { counter : 1 } } , function(에러, 결과){
+                res.send({
+                    _id: totalCount + 1
+                });
+            })
+        });
+    });
+});
+
+app.delete('/delete', function(req, res){
+    req.body._id = parseInt(req.body._id)
+    const targetId = req.body._id;
+    db.collection('post').deleteOne(req.body, function(err, result){
+        console.log('삭제완료')
+    })
+    res.send({
+        targetId,
+    });
+});
+
+
+app.put('/modify', function(req, res){
+    req.body._id = parseInt(req.body._id);
+    db.collection('post').updateOne( 
+        {_id : req.body._id}, 
+        {$set : 
+            { 
+                title : req.body.title, 
+                content: req.body.content,
+            }
+        }, function(){
+        res.send("수정완료");
+    });
+});
+
+
+
 app.put('/done', function(req, res){
     req.body._id = parseInt(req.body._id);
     console.log(req.body._id);
@@ -101,3 +152,4 @@ app.put('/doing', function(req, res){
         res.send(result);
     });
 });
+
