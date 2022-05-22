@@ -8,10 +8,11 @@ export class BoardServ {
         }
     };
 
-    async fetchBoard(method:string,url:string) : Promise<Object> {
+    async fetchBoard(method:string,url:string,data?:Object) : Promise<Object> {
         const params = {
             method: method,
             url: url,
+            data: data
         }
         const option = this.option;
 

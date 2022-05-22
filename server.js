@@ -76,6 +76,7 @@ app.put('/modify', function(req, res){
 
 app.put('/done', function(req, res){
     req.body._id = parseInt(req.body._id);
+    console.log(req.body._id);
     db.collection('post').updateOne( 
         {_id : req.body._id}, 
         {$set : 
@@ -83,6 +84,20 @@ app.put('/done', function(req, res){
                 status: "done"
             }
         }, function(result){
-        
+        res.send(result);
+    });
+});
+
+app.put('/doing', function(req, res){
+    req.body._id = parseInt(req.body._id);
+    console.log(req.body._id);
+    db.collection('post').updateOne( 
+        {_id : req.body._id}, 
+        {$set : 
+            { 
+                status: "doing"
+            }
+        }, function(result){
+        res.send(result);
     });
 });
