@@ -1,0 +1,25 @@
+.board__list {
+    display: flex; flex-wrap: wrap; max-width: 80rem; margin: 2rem auto; gap: 2rem;
+    background: #8c82ff; padding: 3rem; border-radius: 2rem;
+    > li {
+        width: 100%; 
+        justify-content: space-between; 
+        
+
+        a {
+            display: flex; padding: 1rem; background: #fff; transition: .3s ease;
+            &:hover {box-shadow: 4px 4px 10px 0 rgba(0,0,0,0.4);} overflow: hidden;
+        }
+
+        .txtWrap {
+            .title {display: block; font-size: 1.8rem; font-weight: 600; color: #222; margin: 0 0 1rem;}
+            .contents {font-size: 1.6rem; color: #222;}
+            .date {display: block; font-size: 1.4rem; font-weight: 500; margin: 2rem 0 0;}
+        }
+
+        .btnWrap {
+            display: flex; justify-content: flex-end; margin: 1rem 0 0; gap: 0.5rem;
+            button {border: none; background: #fff; padding: 0.5rem 1rem; color: #222; font-size: 1.4rem; font-weight: 700;}
+        }
+    }
+}

@@ -1,0 +1,15 @@
+.TODOAPP__TIT {text-align: center; font-size: 6rem; font-weight: 700;}
+
+.login {
+    max-width: 80rem; margin: 2rem auto;
+    padding: 2rem; box-shadow: 4px 4px 20px 0 rgba(0,0,0,0.2); font-weight: 500;
+    border-radius: 2rem;
+    .subTit {font-size: 4rem; text-align: center; font-weight: 700; margin: 0 0 2rem;}
+    input {
+        width: 100%; height: 4rem; background: #fff; border: 1px solid #ddd; font-size: 1.6rem; padding: 0 2rem;
+        margin: 0 0 1rem;
+    }
+    button {
+        width: 100%; border: none; background: #eaeaea; height: 6rem; font-size: 2.5rem; font-weight: 600;
+    }
+}
