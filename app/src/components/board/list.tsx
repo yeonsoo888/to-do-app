@@ -86,25 +86,29 @@ export default function List():JSX.Element {
                 ...post,
             ];
             dispatch({type:"setBoard", payload:newPost})
+            elInput.current!.value = '';
+            elTextarea.current!.value = '';
         });
     }
 
     const handleDelete = (number:Number) => {
-        board.fetchBoard(
-            'delete',
-            '/delete',
-            {
-                _id: number
-            }
-        )
-        .then((res:any) => {
-            const removeBoard = post.filter((item:any) => {
-                if(number !== item._id) {
-                    return item;
+        if(window.confirm("삭제 하시겠습니까?")) {
+            board.fetchBoard(
+                'delete',
+                '/delete',
+                {
+                    _id: number
                 }
+            )
+            .then((res:any) => {
+                const removeBoard = post.filter((item:any) => {
+                    if(number !== item._id) {
+                        return item;
+                    }
+                });
+                dispatch({type:'setBoard',payload:removeBoard});
             });
-            dispatch({type:'setBoard',payload:removeBoard});
-        });
+        }
     }
 
     return (

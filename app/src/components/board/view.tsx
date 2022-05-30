@@ -57,22 +57,24 @@ export default function View() {
     }
     
     const handleDelete = () => {
-        board.fetchBoard(
-            'delete',
-            '/delete',
-            {
-                _id: parseInt(currentNum)
-            }
-        )
-        .then((res:any) => {
-            const removeBoard = post.filter((item:any) => {
-                if(currentNum !== item._id) {
-                    return item;
+        if(window.confirm('삭제하시겠습니까?')) {
+            board.fetchBoard(
+                'delete',
+                '/delete',
+                {
+                    _id: parseInt(currentNum)
                 }
+            )
+            .then((res:any) => {
+                const removeBoard = post.filter((item:any) => {
+                    if(currentNum !== item._id) {
+                        return item;
+                    }
+                });
+                dispatch({type:'setBoard',payload:removeBoard});
+                history.push('/');
             });
-            dispatch({type:'setBoard',payload:removeBoard});
-            history.push('/');
-        });
+        }
     }
 
     
