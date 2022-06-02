@@ -21,8 +21,8 @@ MongoClient.connect('mongodb+srv://admin:qwer1234@cluster0.rtid5.mongodb.net/myF
     
     db = client.db('todoapp');
     
-    http.listen(8080, function () {
-        console.log('listening on 8080')
+    http.listen(process.env.PORT || 5000, function () {
+        console.log('listening on 5000')
     }); 
 })
 
