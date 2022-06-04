@@ -1,4 +1,5 @@
 const express = require('express');
+const PORT = process.env.PORT;
 const path = require('path');
 const app = express();
 const cors = require('cors');
@@ -21,7 +22,7 @@ MongoClient.connect('mongodb+srv://admin:qwer1234@cluster0.rtid5.mongodb.net/myF
     
     db = client.db('todoapp');
     
-    http.listen(process.env.PORT || 5000, function () {
+    http.listen( PORT, function () {
         console.log('listening on 5000')
     }); 
 })
